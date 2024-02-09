@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import useInventoryManagementStore from './inventory-management.store';
-import { IInventoryItem } from './inventory-management.types';
+import { IInventoryItem } from './inventory-management.interface';
 import { fetchData } from './utils';
 import { INVENTORY_ITEMS_API_URL } from './constants'
 
@@ -10,26 +10,32 @@ interface IUseFetchInventoryItems {
 }
 
 const useFetchInventoryItems = (): IUseFetchInventoryItems => {
-    const { isLoading, setIsLoading, inventoryItems, setInventoryItems } = useInventoryManagementStore((state) => ({
+    const { isLoading, setIsLoading, products, setProducts } = useInventoryManagementStore((state) => ({
         isLoading: state.isLoading,
         setIsLoading: state.setIsLoading,
-        inventoryItems: state.inventoryItems,
-        setInventoryItems: state.setInventoryItems,
+        products: state.products,
+        setProducts: state.setProducts,
     }));
 
-    const fetchInventoryItems = async (): Promise<void> => {
-        setIsLoading(true);
-        const response = await fetchData(INVENTORY_ITEMS_API_URL);
-        if (response) setInventoryItems(response);
-        else setInventoryItems(undefined);
-        setIsLoading(false);
+    const fetchProducts = async (): Promise<void> => {
+        try {
+            setIsLoading(true);
+            const response = await fetchData(INVENTORY_ITEMS_API_URL);
+            if (response) setProducts(response);
+            else setProducts(undefined);
+            setIsLoading(false);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+
     };
 
     useEffect(() => {
-        fetchInventoryItems();
+        // fetchProducts();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return { isLoading, inventoryItems };
+    return { isLoading, products };
 };
 
 export default useFetchInventoryItems;

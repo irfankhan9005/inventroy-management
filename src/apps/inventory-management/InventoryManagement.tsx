@@ -1,11 +1,19 @@
-import React from 'react';
 import useFetchInventoryItems from './use-fetch-inventory-items';
+import Widgets from './components/widgets';
+import ToggleView from './components/toggle-view';
+import Grid from './components/grid';
+import './inventory-management.css';
 
-const InventoryManagement: React.FC = () => {
-    const { isLoading, inventoryItems } = useFetchInventoryItems();
+const InventoryManagement = (): JSX.Element => {
+    const { isLoading } = useFetchInventoryItems();
+
+    if (isLoading) return <div>Loading...</div>
 
     return (
-        <div>
+        <div className='inventory_management_container'>
+            <ToggleView />
+            <Widgets />
+            <Grid />
         </div>
     );
 };
